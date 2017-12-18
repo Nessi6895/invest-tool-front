@@ -1,0 +1,67 @@
+swagger: '2.0'
+info:
+  description: ' Данный сервис предоставляет API для получения информаци о  ходе торгов на ММВБ '
+  version: 1.0.0
+  title: InvestTool
+  contact:
+    email: arsen.gl@yandex.ru
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: 'localhost:8080'
+basePath: /api/v1.0
+tags:
+  - name: quotes
+    description: Котировки
+schemes:
+  - http
+paths:
+  /quote:
+    get:
+      tags:
+        - quotes
+      summary: Список котировок
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: В теле ответа массив с парой id и названия котировки
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ShorQuote'
+  '/quote/{id}':
+    get:
+      tags:
+        - quotes
+      summary: Подробная информация о котировке
+      parameters:
+        - name: id
+          in: path
+          description: id котировки
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: ok
+          schema:
+            $ref: '#/definitions/Quote'
+definitions:
+  Quote:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      issuerName:
+        type: string
+      lastPrice:
+        type: number
+  ShorQuote:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
