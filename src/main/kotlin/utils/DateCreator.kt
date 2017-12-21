@@ -9,7 +9,7 @@ class DateCreator {
             val day = calendar.get(Calendar.DAY_OF_MONTH)
             val month = calendar.get(Calendar.MONTH)
             val year = calendar.get(Calendar.YEAR)
-            return year.toString() + "-" + (month + 1).toString() + "-" + (day - 3).toString()
+            return year.toString() + "-" + (month + 1).toString() + "-" + (day - 2).toString()
         }
     }
 }

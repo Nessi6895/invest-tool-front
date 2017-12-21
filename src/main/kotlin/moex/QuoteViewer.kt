@@ -30,16 +30,13 @@ class QuoteViewer {
                             text("OPEN")
                         }
                         td {
-                            text("OPEN")
-                        }
-                        td {
                             text("LOW")
                         }
                         td {
                             text("HIGH")
                         }
                         td {
-                            text("LEGALCLOSERICE")
+                            text("LEGALCLOSEPRICE")
                         }
                         td {
                             text("WAPRICE")
