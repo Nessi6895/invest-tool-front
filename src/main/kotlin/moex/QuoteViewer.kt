@@ -4,7 +4,7 @@ import utils.*
 
 class QuoteViewer {
     companion object {
-        fun viewQuotes(quotes: List<Quote>): String {
+        fun viewQuotes(quotes: List<FullQuote>): String {
             return html {
                 table {
                     tr {

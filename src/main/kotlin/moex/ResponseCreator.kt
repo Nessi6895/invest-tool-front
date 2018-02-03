@@ -1,6 +1,7 @@
 package moex
 
-import com.beust.klaxon.json
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import utils.Constants
 import utils.Constants.Companion.BOARDS
 import utils.DateCreator
@@ -8,8 +9,9 @@ import java.net.URL
 
 class ResponseCreator {
     companion object {
-        private fun getAllQuotesFromMoex(): List<Quote>{
-            val listBuilder: MutableList<Quote> = mutableListOf()
+        private val mapper = ObjectMapper().registerModule(KotlinModule())
+        private fun getAllQuotesFromMoex(): List<FullQuote>{
+            val listBuilder: MutableList<FullQuote> = mutableListOf()
             for (board in BOARDS) {
                 val initResponse = URL("http://iss.moex.com/iss/history/engines/${Constants.ENGINE}/markets/shares/boards/$board/securities.json?date=${DateCreator.createDateString()}").readText()
                 val numOfQuotes = ResponseParser.getNumOfQuotes(initResponse)
@@ -23,21 +25,14 @@ class ResponseCreator {
         }
         fun getJSONResponseAll(): String {
             val list = getAllQuotesFromMoex()
-            return json {
-                array(listOf(0..(list.size - 1)).flatten().map {
-                    obj("id" to it, "name" to list[it].shortName)
-                })
-            }.toJsonString()
+            val quotes = (0 until list.size).map { ShortQuote(it, list[it].shortName) }
+            return mapper.writeValueAsString(quotes)
         }
 
         fun getQuoteByID(id: Int): String {
-            val all = getAllQuotesFromMoex()
-            return json {
-                obj("id" to id,
-                        "name" to all[id].shortName,
-                        "issuerName" to "TO BE IMPLEMENTED",
-                        "lastPrice" to all[id].legalClosePrice)
-            }.toJsonString()
+            val fullQuote = getAllQuotesFromMoex()[id]
+            val quote = Quote(id, fullQuote.shortName, "TO BE IMPLEMENTED", fullQuote.legalClosePrice)
+            return mapper.writeValueAsString(quote)
         }
     }
 }
